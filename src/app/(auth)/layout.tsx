@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LegalLinks } from "@/components/LegalPage";
 import { TimezoneSync } from "@/components/TimezoneSync";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <span className="brand-mark" aria-hidden /> Daily Thought
       </Link>
       <section className="card auth-card">{children}</section>
+      <LegalLinks />
     </main>
   );
 }

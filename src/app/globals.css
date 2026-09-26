@@ -539,3 +539,40 @@ input:focus {
 .inline-icon {
   vertical-align: -2px;
 }
+
+/* ---------- Legal pages ---------- */
+
+.legal {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: calc(24px + env(safe-area-inset-top)) 16px 48px;
+  display: grid;
+  gap: 20px;
+}
+
+.legal-body {
+  display: grid;
+  gap: 12px;
+}
+
+.legal-body h2 {
+  font-size: 1.05rem;
+  margin: 12px 0 0;
+}
+
+.legal-body ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.legal-links {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.legal-links a {
+  color: inherit;
+}
