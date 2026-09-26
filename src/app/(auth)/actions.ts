@@ -70,6 +70,8 @@ export async function signInWithGoogle(fd: FormData) {
     provider: "google",
     options: {
       redirectTo: `${await siteOrigin()}/auth/callback?next=${encodeURIComponent(next)}`,
+      // Always show Google's account chooser instead of silently reusing the signed-in account.
+      queryParams: { prompt: "select_account" },
     },
   });
   if (error || !data.url) {
