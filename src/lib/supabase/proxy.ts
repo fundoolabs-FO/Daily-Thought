@@ -6,6 +6,18 @@ const PROTECTED_PREFIXES = ["/today"];
 const GUEST_ONLY = ["/login", "/signup"];
 
 export async function updateSession(request: NextRequest) {
+  // If Supabase falls back to the Site URL (redirect URL not allow-listed), the auth
+  // code lands on some other page. Forward it to the callback instead of losing it.
+  const code = request.nextUrl.searchParams.get("code");
+  if (code && !request.nextUrl.pathname.startsWith("/auth/")) {
+    const callback = request.nextUrl.clone();
+    callback.pathname = "/auth/callback";
+    callback.search = "";
+    callback.searchParams.set("code", code);
+    callback.searchParams.set("next", "/today");
+    return NextResponse.redirect(callback);
+  }
+
   let response = NextResponse.next({ request });
   const { url, key } = supabaseEnv();
 
