@@ -14,7 +14,7 @@ A small installable web app (PWA). Each day you get one thoughtful idea, can wri
 
 | Piece | Where |
 | --- | --- |
-| Schema, RLS, `get_daily_thought(p_tz)`, `get_streak(p_tz)` | [supabase/migrations/001_init.sql](supabase/migrations/001_init.sql) |
+| Schema, RLS, `get_daily_thought(p_tz)`, `get_streak(p_tz)` | [supabase/migrations/](supabase/migrations/) (`001_init.sql`, `002_fix_get_daily_thought.sql`) |
 | 64 original, unattributed thoughts | [supabase/seed.sql](supabase/seed.sql) |
 | Session refresh and route protection (`/today`) | [src/proxy.ts](src/proxy.ts), [src/lib/supabase/proxy.ts](src/lib/supabase/proxy.ts) |
 | OAuth / email-link code exchange | [src/app/auth/callback/route.ts](src/app/auth/callback/route.ts) |
@@ -63,12 +63,23 @@ Create **two** projects at [supabase.com](https://supabase.com), for example `da
 
 ### 1.1 Run the SQL
 
-In each project, open **SQL Editor** and run these two files in order:
+Easiest, with the Supabase CLI from the project folder:
+
+```bash
+npx supabase login
+npx supabase link --project-ref <20-letter-project-ref>   # asks for the database password
+npx supabase db push --include-seed
+```
+
+Or, in the dashboard **SQL Editor**, run these files in order:
 
 1. [supabase/migrations/001_init.sql](supabase/migrations/001_init.sql)
-2. [supabase/seed.sql](supabase/seed.sql)
+2. [supabase/migrations/002_fix_get_daily_thought.sql](supabase/migrations/002_fix_get_daily_thought.sql)
+3. [supabase/seed.sql](supabase/seed.sql)
 
-Both files are safe to run again. If you use the Supabase CLI instead: `supabase link --project-ref <ref>`, then `supabase db push`, then run `seed.sql` in the SQL editor (or `psql`).
+The files are safe to run again.
+
+When creating a project, keep **Enable Data API** on. **Automatically expose new tables** can be off, because the migration grants exactly the privileges the app needs.
 
 To add more thoughts later: `insert into public.thoughts (body) values ('…');`. To retire one: `update public.thoughts set active = false where id = …;`.
 
