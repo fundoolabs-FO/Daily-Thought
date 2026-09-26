@@ -121,7 +121,7 @@ export default async function TodayPage() {
           {today.author && <p className="thought-author">{today.author}</p>}
 
           <ReflectionForm key={today.day} day={today.day} initial={today.reflection} />
-          <DoneForm day={today.day} completedAt={today.completed_at} />
+          <DoneForm day={today.day} completedAt={today.completed_at} timeZone={timeZone} />
         </section>
 
         <section aria-labelledby="history-heading">

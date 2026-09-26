@@ -50,9 +50,22 @@ function DoneButton() {
   );
 }
 
-export function DoneForm({ day, completedAt }: { day: string; completedAt: string | null }) {
+export function DoneForm({
+  day,
+  completedAt,
+  timeZone,
+}: {
+  day: string;
+  completedAt: string | null;
+  timeZone: string;
+}) {
   if (completedAt) {
-    const time = new Date(completedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    // Format in the user's timezone so the server render (UTC on Vercel) matches the client.
+    const time = new Date(completedAt).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone,
+    });
     return (
       <p className="done-badge" role="status">
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
