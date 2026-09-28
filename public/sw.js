@@ -7,7 +7,7 @@
  *
  * Bump VERSION to invalidate caches from previous deploys.
  */
-const VERSION = "v1";
+const VERSION = "v2";
 const PAGE_CACHE = `dt-pages-${VERSION}`;
 const STATIC_CACHE = `dt-static-${VERSION}`;
 const OFFLINE_URL = "/offline";

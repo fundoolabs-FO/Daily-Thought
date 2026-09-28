@@ -6,15 +6,22 @@ import sharp from "sharp";
 
 const OUT = new URL("../public/icons/", import.meta.url);
 
-// A sun rising over a horizon: a new thought each morning.
+// A glowing lightbulb: a new idea each day.
+// The bulb is drawn on a 100-unit grid, then scaled to fit the icon.
 // `inset` shrinks the artwork so maskable icons keep it inside the 80% safe zone.
 function art({ size, rounded, inset = 1 }) {
   const r = rounded ? size * 0.22 : 0;
   const s = size * inset;
   const o = (size - s) / 2;
-  const cx = size / 2;
-  const horizon = o + s * 0.66;
-  const sunR = s * 0.2;
+  const k = s / 100;
+  const rays = [-150, -115, -90, -65, -30, 180, 0]
+    .map((deg) => {
+      const a = (deg * Math.PI) / 180;
+      const [x1, y1] = [50 + 27 * Math.cos(a), 40 + 27 * Math.sin(a)];
+      const [x2, y2] = [50 + 34 * Math.cos(a), 40 + 34 * Math.sin(a)];
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    })
+    .join("");
   return `
 <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
   <defs>
@@ -22,17 +29,26 @@ function art({ size, rounded, inset = 1 }) {
       <stop offset="0" stop-color="#1b2240"/>
       <stop offset="1" stop-color="#2d3a5c"/>
     </linearGradient>
-    <radialGradient id="glow" cx="0.5" cy="${horizon / size}" r="0.55">
-      <stop offset="0" stop-color="#e3a44f" stop-opacity="0.55"/>
+    <radialGradient id="glow" cx="0.5" cy="0.44" r="0.5">
+      <stop offset="0" stop-color="#e3a44f" stop-opacity="0.5"/>
       <stop offset="1" stop-color="#e3a44f" stop-opacity="0"/>
     </radialGradient>
-    <clipPath id="above"><rect x="0" y="0" width="${size}" height="${horizon}"/></clipPath>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd48a"/>
+      <stop offset="1" stop-color="#f2b766"/>
+    </linearGradient>
   </defs>
   <rect width="${size}" height="${size}" rx="${r}" fill="url(#sky)"/>
   <rect width="${size}" height="${size}" rx="${r}" fill="url(#glow)"/>
-  <circle cx="${cx}" cy="${horizon}" r="${sunR}" fill="#f2b766" clip-path="url(#above)"/>
-  <rect x="${o + s * 0.2}" y="${horizon - s * 0.012}" width="${s * 0.6}" height="${s * 0.024}" rx="${s * 0.012}" fill="#f7f3ec"/>
-  <rect x="${o + s * 0.32}" y="${horizon + s * 0.07}" width="${s * 0.36}" height="${s * 0.02}" rx="${s * 0.01}" fill="#f7f3ec" opacity="0.55"/>
+  <g transform="translate(${o} ${o + 3 * k}) scale(${k})">
+    <g stroke="#f2b766" stroke-width="3.2" stroke-linecap="round" opacity="0.9">${rays}</g>
+    <path d="M41 65 C41 57 30 53 30 40 A20 20 0 1 1 70 40 C70 53 59 57 59 65 Z" fill="url(#glass)"/>
+    <path d="M37.5 38 A13 13 0 0 1 47 27.5" fill="none" stroke="#fff6e3" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+    <path d="M46 64 V54 A4 4 0 0 1 54 54 V64" fill="none" stroke="#c98a3e" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+    <rect x="40" y="68" width="20" height="5" rx="2.5" fill="#f7f3ec"/>
+    <rect x="41.5" y="75" width="17" height="5" rx="2.5" fill="#f7f3ec" opacity="0.8"/>
+    <rect x="45" y="82" width="10" height="3.5" rx="1.75" fill="#f7f3ec" opacity="0.6"/>
+  </g>
 </svg>`;
 }
 
