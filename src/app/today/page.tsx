@@ -24,7 +24,7 @@ type HistoryRow = {
   day: string;
   reflection: string | null;
   completed_at: string | null;
-  thoughts: { body: string } | null;
+  thoughts: { body: string; author: string | null } | null;
 };
 
 export default async function TodayPage() {
@@ -69,7 +69,7 @@ export default async function TodayPage() {
     supabase.rpc("get_streak", { p_tz: timeZone }),
     supabase
       .from("daily_thoughts")
-      .select("day, reflection, completed_at, thoughts(body)")
+      .select("day, reflection, completed_at, thoughts(body, author)")
       .eq("user_id", userId)
       .gte("day", addDays(today.day, -7))
       .lt("day", today.day)
@@ -141,6 +141,9 @@ export default async function TodayPage() {
                     {row?.thoughts ? (
                       <>
                         <p>{row.thoughts.body}</p>
+                        {row.thoughts.author && (
+                          <p className="history-author">{row.thoughts.author}</p>
+                        )}
                         {row.reflection && <p className="history-reflection">“{row.reflection}”</p>}
                       </>
                     ) : (
@@ -157,6 +160,13 @@ export default async function TodayPage() {
             })}
           </ol>
         </section>
+
+        <p className="credit">
+          Inspirational quotes provided by{" "}
+          <a href="https://zenquotes.io/" target="_blank" rel="noopener noreferrer">
+            ZenQuotes API
+          </a>
+        </p>
       </main>
 
       <InstallPrompt />

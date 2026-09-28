@@ -141,9 +141,7 @@ p {
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  background:
-    radial-gradient(circle at 50% 62%, var(--accent) 0 32%, transparent 33%),
-    #2d3a5c;
+  background: url("/icons/icon-192.png") center / cover;
 }
 
 .card {
@@ -428,6 +426,23 @@ input:focus {
   font-family: var(--serif);
   font-size: 1rem;
   min-width: 0;
+}
+
+.history-author {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.credit {
+  margin-top: 8px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.credit a {
+  color: inherit;
 }
 
 .history-reflection {

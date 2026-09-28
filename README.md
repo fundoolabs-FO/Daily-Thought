@@ -15,6 +15,7 @@ A small installable web app (PWA). Each day you get one thoughtful idea, can wri
 | Piece | Where |
 | --- | --- |
 | Schema, RLS, `get_daily_thought(p_tz)`, `get_streak(p_tz)` | [supabase/migrations/](supabase/migrations/) (`001_init.sql`, `002_fix_get_daily_thought.sql`) |
+| Nightly ZenQuotes import (pg_cron + pg_net) | [supabase/migrations/003_zenquotes_import.sql](supabase/migrations/003_zenquotes_import.sql) |
 | 64 original, unattributed thoughts | [supabase/seed.sql](supabase/seed.sql) |
 | Session refresh and route protection (`/today`) | [src/proxy.ts](src/proxy.ts), [src/lib/supabase/proxy.ts](src/lib/supabase/proxy.ts) |
 | OAuth / email-link code exchange | [src/app/auth/callback/route.ts](src/app/auth/callback/route.ts) |
@@ -75,11 +76,14 @@ Or, in the dashboard **SQL Editor**, run these files in order:
 
 1. [supabase/migrations/001_init.sql](supabase/migrations/001_init.sql)
 2. [supabase/migrations/002_fix_get_daily_thought.sql](supabase/migrations/002_fix_get_daily_thought.sql)
-3. [supabase/seed.sql](supabase/seed.sql)
+3. [supabase/migrations/003_zenquotes_import.sql](supabase/migrations/003_zenquotes_import.sql)
+4. [supabase/seed.sql](supabase/seed.sql)
 
 The files are safe to run again.
 
 When creating a project, keep **Enable Data API** on. **Automatically expose new tables** can be off, because the migration grants exactly the privileges the app needs.
+
+Every night at 18:00 UTC, Supabase fetches about 50 quotes from [ZenQuotes](https://zenquotes.io/) and adds the new ones to `thoughts`. To import right away, run `select public.fetch_zenquotes();`, wait a minute, then run `select public.import_zenquotes();` (it returns how many were added). ZenQuotes' free tier requires the credit line on `/today`.
 
 To add more thoughts later: `insert into public.thoughts (body) values ('…');`. To retire one: `update public.thoughts set active = false where id = …;`.
 
